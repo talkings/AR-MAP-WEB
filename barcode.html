@@ -1,7 +1,8 @@
 <html>
 
 	<head>
-		<title>Pattern marker example with Three.js</title>
+		<title>条形码图像识别跟踪</title>
+		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 		<style>
 			html,
@@ -23,13 +24,14 @@
 				window.ARThreeOnLoad = function() {
 
 					ARController.getUserMediaThreeScene({
-						maxARVideoSize: 320,
+						maxARVideoSize: 640,
 						//cameraParam: 'Data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
 						cameraParam: 'Data/camera_para.dat',
 						onSuccess: function(arScene, arController, arCamera) {
 							//console.log(artoolkit.AR_MATRIX_CODE_DETECTION);
 							//设置ARController模式检测模式以检测条形码标记。  
 							//arController.setPatternDetectionMode（artoolkit.AR_MATRIX_CODE_DETECTION）;
+							console.log(arController);
 							document.body.className = arController.orientation;
 
 							var renderer = new THREE.WebGLRenderer({
@@ -75,7 +77,10 @@
 							torus.rotation.x = Math.PI / 2;
 
 							arController.loadMarker('Data/patt.hiro', function(markerId) {
+//								console.log(arController);
 								var markerRoot = arController.createThreeMarker(markerId);
+//								var target = document.createElement('div');
+//								target.innerHTML = '<div>2123213123213</div>'
 								markerRoot.add(sphere);
 								arScene.scene.add(markerRoot);
 							});
@@ -93,12 +98,15 @@
 								sphere.rotation.z += rotationV;
 								torus.rotation.y += rotationV;
 								rotationV *= 0.8;
-
+								//console.log(rotationV);
 								arScene.renderOn(renderer);
 								requestAnimationFrame(tick);
 							};
 
 							tick();
+							arController.addEventListener('getMarker', function(ev) {
+								//console.log(ev, 111);
+							});
 
 						}
 					});
